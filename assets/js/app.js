@@ -67,7 +67,7 @@ function showToast(message, type = 'success') {
             <div class="toast-header">
                 <i class="bi ${icon} me-2"></i>
                 <strong class="me-auto">${type === 'success' ? 'Sucesso' : type === 'danger' ? 'Erro' : 'Aviso'}</strong>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
             </div>
             <div class="toast-body"></div>
         </div>`;

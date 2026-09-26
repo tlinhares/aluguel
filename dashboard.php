@@ -205,9 +205,18 @@ require_once __DIR__ . '/includes/navbar.php';
 <?php
 $extra_js = '
 <script>
+    const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+    const graficos = [];
+    function coresTema(ch) {
+        const txt = cssVar("--text-primary"), sec = cssVar("--text-secondary"), grid = cssVar("--chart-grid");
+        if (ch.options.plugins.legend) ch.options.plugins.legend.labels.color = txt;
+        Object.values(ch.options.scales || {}).forEach(s => { if (s.ticks) s.ticks.color = sec; if (s.grid) s.grid.color = grid; });
+        if (ch.config.type === "doughnut") ch.data.datasets[0].borderColor = cssVar("--card-bg");
+    }
+    document.addEventListener("temachange", () => graficos.forEach(ch => { coresTema(ch); ch.update("none"); }));
     // Gráfico de Receita
     const ctxR = document.getElementById("chartReceita").getContext("2d");
-    new Chart(ctxR, {
+    graficos.push(new Chart(ctxR, {
         type: "bar",
         data: {
             labels: ' . json_encode($meses_labels) . ',
@@ -237,14 +246,14 @@ $extra_js = '
                 }
             }
         }
-    });
+    }));
 
     // Gráfico Imóveis
     const statusData = ' . json_encode($imoveis_status) . ';
     const statusLabels = { disponivel:"Disponível", alugado:"Alugado", manutencao:"Manutenção", inativo:"Inativo" };
     const statusColors = { disponivel:"#10b981", alugado:"#6366f1", manutencao:"#f59e0b", inativo:"#6b7280" };
     const ctxI = document.getElementById("chartImoveis").getContext("2d");
-    new Chart(ctxI, {
+    graficos.push(new Chart(ctxI, {
         type: "doughnut",
         data: {
             labels: statusData.map(s => statusLabels[s.status] || s.status),
@@ -265,6 +274,7 @@ $extra_js = '
             },
             cutout: "65%"
         }
-    });
+    }));
+    graficos.forEach(ch => { coresTema(ch); ch.update("none"); });
 </script>';
 require_once __DIR__ . '/includes/footer.php';

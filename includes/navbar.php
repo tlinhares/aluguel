@@ -74,6 +74,7 @@ if (is_admin()) {
             <span class="text-muted small d-none d-md-inline">
                 <?= date('d/m/Y H:i') ?>
             </span>
+            <button type="button" class="btn-tema" onclick="alternarTema(this)" aria-label="Alternar tema"><i class="bi bi-moon-stars"></i></button>
         </div>
     </header>
 
