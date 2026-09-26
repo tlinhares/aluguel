@@ -154,12 +154,12 @@ function carregarTabela() {
             { data: "id", width: "50px" },
             { data: "nome" },
             { data: "cpf", defaultContent: "-" },
-            { data: "telefone", defaultContent: "-", render: d => d ? d : "-" },
+            { data: "telefone", defaultContent: "-", render: d => d ? esc(d) : "-" },
             { data: "email", defaultContent: "-" },
             { data: "status", render: s => s === "ativo" ? \'<span class="badge bg-success">Ativo</span>\' : \'<span class="badge bg-secondary">Inativo</span>\' },
             { data: "id", orderable: false, render: function(id, t, row) {
                 return `<button class="btn btn-action btn-outline-primary me-1" onclick="editarInquilino(${id})" title="Editar"><i class="bi bi-pencil"></i></button>
-                        <button class="btn btn-action btn-outline-danger" onclick="excluirInquilino(${id}, \'${row.nome.replace(/\'/g,"\\\'")}\' )" title="Excluir"><i class="bi bi-trash"></i></button>`;
+                        <button class="btn btn-action btn-outline-danger" data-nome="${esc(row.nome)}" onclick="excluirInquilino(${id}, this.dataset.nome)" title="Excluir"><i class="bi bi-trash"></i></button>`;
             }}
         ]
     });

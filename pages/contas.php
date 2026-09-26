@@ -185,7 +185,7 @@ function abrirPagamento(id) {
             if (!res.success) return showToast(res.message, "danger");
             const d = res.data;
             document.getElementById("pag_parcela_id").value = d.id;
-            document.getElementById("pag_info").innerHTML = `<strong>${d.inquilino_nome}</strong><br><small class="text-muted">${d.imovel_end}</small>`;
+            document.getElementById("pag_info").innerHTML = `<strong>${esc(d.inquilino_nome)}</strong><br><small class="text-muted">${esc(d.imovel_end)}</small>`;
             document.getElementById("pag_valor_orig").value = "R$ " + parseFloat(d.valor).toLocaleString("pt-BR",{minimumFractionDigits:2});
             document.getElementById("pag_vencimento").value = d.data_vencimento ? d.data_vencimento.split("-").reverse().join("/") : "-";
             document.getElementById("pag_valor_pago").value = d.valor;

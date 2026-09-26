@@ -13,16 +13,26 @@ CREATE TABLE IF NOT EXISTS usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
-    senha VARCHAR(64) NOT NULL,
+    senha VARCHAR(255) NOT NULL,
     nivel ENUM('admin','operador') NOT NULL DEFAULT 'operador',
     status ENUM('ativo','inativo') NOT NULL DEFAULT 'ativo',
+    trocar_senha TINYINT(1) NOT NULL DEFAULT 0,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
--- Usuário admin padrão (senha: admin123)
-INSERT INTO usuarios (nome, email, senha, nivel, status) VALUES 
-('Administrador', 'admin@sistema.com', MD5('admin123'), 'admin', 'ativo');
+CREATE TABLE IF NOT EXISTS login_tentativas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(160) NOT NULL,
+    ip VARCHAR(45) NOT NULL,
+    tentado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    KEY idx_lt_email (email, tentado_em),
+    KEY idx_lt_ip (ip, tentado_em)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- senha inicial admin123 (hash bcrypt); troca obrigatória no 1º acesso
+INSERT INTO usuarios (nome, email, senha, nivel, status, trocar_senha) VALUES 
+('Administrador', 'admin@sistema.com', '$2y$10$uMNKBb857oq9BV9Cvrc0K.hTrZSI0fv/DcTlA9oKG4efWudkvlCy2', 'admin', 'ativo', 1);
 
 -- ============================================================
 -- INQUILINOS

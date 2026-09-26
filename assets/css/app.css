@@ -650,3 +650,173 @@ body {
     body { background: white !important; color: black !important; }
     .card { background: white !important; border: 1px solid #ddd !important; color: black !important; }
 }
+
+/* ============================================================
+   MOVIMENTO — inspirado na referência "SOLE" (@dailyflutterui)
+   Login: splash → marca sobe → painel desliza de baixo → dissolve ao entrar.
+   Sistema: páginas entram de leve, modais sobem como painel, cards em cascata.
+   Tudo desligado para quem prefere movimento reduzido.
+   ============================================================ */
+:root {
+    --ease-out: cubic-bezier(.22, 1, .36, 1);
+    --lp-sheet-bg: #f7f8fc;
+    --lp-ink: #111827;
+    --lp-ink-2: #4b5563;
+    --lp-line: #dfe3ee;
+}
+
+/* ---------- Palco do login ---------- */
+.lp { overflow: hidden; }
+.lp.login-page { display: block; background:
+    radial-gradient(ellipse 70% 45% at 50% 38%, rgba(99,102,241,.18), transparent 70%),
+    #0b0f19; }
+.lp-stage { position: relative; min-height: 100vh; min-height: 100dvh; }
+
+/* Marca: no splash fica no centro; em "pronto" sobe e encolhe */
+.lp-brand {
+    position: absolute; left: 50%; top: 46%;
+    transform: translate(-50%, -50%) scale(1);
+    text-align: center; color: #fff;
+    transition: top .75s var(--ease-out), transform .75s var(--ease-out);
+    z-index: 1;
+}
+.lp-logo {
+    width: 92px; height: 92px; margin: 0 auto 18px; border-radius: 26px;
+    display: grid; place-items: center; font-size: 2.6rem; color: #fff;
+    background: linear-gradient(145deg, #7c7ff5, #4f46e5);
+    box-shadow: 0 18px 50px rgba(79,70,229,.55);
+    animation: lpLogoIn .9s var(--ease-out) both;
+}
+.lp-glow {
+    position: absolute; left: 50%; top: 46px; width: 260px; height: 260px;
+    transform: translate(-50%, -50%); border-radius: 50%;
+    background: radial-gradient(circle, rgba(99,102,241,.45), transparent 65%);
+    filter: blur(8px); animation: lpGlow 1.4s var(--ease-out) both; z-index: -1;
+}
+.lp-name { font-size: 1.9rem; font-weight: 800; letter-spacing: .06em; animation: lpUp .7s .35s var(--ease-out) both; }
+.lp-tag { font-size: .8rem; letter-spacing: .28em; text-transform: uppercase; color: #a5a8d8; margin-top: 4px; animation: lpUp .7s .5s var(--ease-out) both; }
+
+/* Barra fina de progresso do splash */
+.lp-progress { position: absolute; left: 50%; bottom: 13vh; width: 120px; height: 3px; margin-left: -60px;
+    border-radius: 3px; background: rgba(255,255,255,.12); overflow: hidden; transition: opacity .3s; }
+.lp-progress span { display: block; height: 100%; width: 0; border-radius: 3px;
+    background: linear-gradient(90deg, #818cf8, #6366f1); animation: lpBar 1.35s .15s var(--ease-out) forwards; }
+
+/* Painel (bottom sheet no celular, cartão central no desktop) */
+.lp-sheet {
+    position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
+    background: var(--lp-sheet-bg); color: var(--lp-ink);
+    border-radius: 28px 28px 0 0; padding: 12px 24px calc(28px + env(safe-area-inset-bottom));
+    box-shadow: 0 -20px 60px rgba(0,0,0,.45);
+    transform: translateY(105%);
+    transition: transform .7s .12s var(--ease-out), opacity .45s, filter .45s;
+}
+.lp-grabber { width: 44px; height: 5px; border-radius: 5px; background: #d3d8e4; margin: 0 auto 18px; }
+.lp-title { font-size: 1.5rem; font-weight: 800; margin: 0 0 4px; color: var(--lp-ink); }
+.lp-sub { font-size: .9rem; color: var(--lp-ink-2); margin-bottom: 18px; }
+.lp-field { margin-bottom: 14px; }
+.lp-field label { display: block; font-size: .8rem; font-weight: 700; color: var(--lp-ink); margin-bottom: 6px; }
+.lp-field label small { font-weight: 400; color: var(--lp-ink-2); }
+.lp-input { position: relative; display: flex; align-items: center; background: #fff;
+    border: 1.5px solid var(--lp-line); border-radius: 14px; transition: border-color .2s, box-shadow .2s; }
+.lp-input:focus-within { border-color: #6366f1; box-shadow: 0 0 0 4px rgba(99,102,241,.15); }
+.lp-input > i { padding: 0 4px 0 14px; color: #6b7280; }
+.lp-input input { flex: 1; border: 0; background: transparent; padding: 13px 12px; font-size: .95rem; color: var(--lp-ink); outline: none; min-width: 0; }
+.lp-input input::placeholder { color: #6b7280; }
+.lp-eye { border: 0; background: none; color: #6b7280; padding: 0 14px; height: 100%; cursor: pointer; }
+.lp-eye:focus-visible { outline: 2px solid #6366f1; border-radius: 8px; }
+.lp-btn { width: 100%; margin-top: 8px; border: 0; border-radius: 14px; padding: 14px; font-weight: 700; font-size: 1rem;
+    color: #fff; background: linear-gradient(135deg, #6366f1, #4f46e5); box-shadow: 0 10px 26px rgba(79,70,229,.35);
+    transition: transform .15s, box-shadow .2s, opacity .2s; }
+.lp-btn:hover { box-shadow: 0 14px 32px rgba(79,70,229,.45); }
+.lp-btn:active { transform: scale(.98); }
+.lp-btn:disabled { opacity: .75; }
+.lp-btn:focus-visible { outline: 3px solid #a5b4fc; outline-offset: 2px; }
+.lp-alert { background: #fdecec; color: #9b1c1c; border-radius: 12px; padding: 10px 14px; font-size: .86rem; margin-bottom: 12px; }
+.lp-foot { text-align: center; font-size: .78rem; color: #6b7280; margin-top: 18px; }
+.lp-foot a { color: #4f46e5; text-decoration: none; font-weight: 600; }
+
+/* Itens do painel entram em cascata quando o painel chega */
+.lp-item { opacity: 0; transform: translateY(14px); }
+.is-ready .lp-item { animation: lpUp .55s calc(.38s + var(--i, 0) * .07s) var(--ease-out) both; }
+
+/* Estado "pronto": marca sobe, barra some, painel desliza */
+.is-ready .lp-brand { top: 15%; transform: translate(-50%, -50%) scale(.62); }
+.is-ready .lp-progress { opacity: 0; }
+.is-ready .lp-sheet { transform: translateY(0); }
+
+/* Saída (login ok): painel dissolve e a marca expande — como no vídeo */
+.is-leaving .lp-sheet { opacity: 0; filter: blur(8px); transform: translateY(24px) scale(.98); }
+.is-leaving .lp-brand { opacity: 0; transform: translate(-50%, -50%) scale(.9); transition: opacity .4s, transform .5s var(--ease-out); }
+
+/* Erro: tremida curta */
+.lp-shake { animation: lpShake .38s ease; }
+
+/* Desktop/tablet: painel vira cartão central */
+@media (min-width: 700px) {
+    .lp-sheet { left: 50%; right: auto; bottom: auto; top: 30%; width: 420px; margin-left: -210px;
+        border-radius: 24px; padding: 26px 30px 24px; opacity: 0; transform: translateY(60px);
+        box-shadow: 0 30px 80px rgba(0,0,0,.5); }
+    .lp-grabber { display: none; }
+    .is-ready .lp-sheet { opacity: 1; transform: translateY(0); }
+    .is-ready .lp-brand { top: 16%; transform: translate(-50%, -50%) scale(.7); }
+    .is-leaving .lp-sheet { opacity: 0; transform: translateY(24px) scale(.98); }
+}
+@media (min-width: 700px) and (max-height: 760px) {
+    .lp-sheet { top: 24%; }
+    .is-ready .lp-brand { top: 11%; transform: translate(-50%, -50%) scale(.55); }
+}
+
+@keyframes lpLogoIn { from { opacity: 0; transform: scale(.6) rotate(-8deg); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+@keyframes lpGlow   { from { opacity: 0; transform: translate(-50%, -50%) scale(.4); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+@keyframes lpUp     { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes lpBar    { to { width: 100%; } }
+@keyframes lpShake  { 20%, 60% { translate: -8px 0; } 40%, 80% { translate: 8px 0; } }
+
+/* ---------- Sistema: entrada das páginas ---------- */
+.page-content > * { animation: appIn .5s var(--ease-out) both; }
+.page-content > *:nth-child(2) { animation-delay: .06s; }
+.page-content > *:nth-child(3) { animation-delay: .12s; }
+.page-content > *:nth-child(4) { animation-delay: .18s; }
+.page-content > *:nth-child(n+5) { animation-delay: .24s; }
+@keyframes appIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+/* Cards de indicadores em cascata */
+.stat-card { animation: appIn .55s var(--ease-out) both; }
+.row > [class*="col"]:nth-child(2) .stat-card { animation-delay: .07s; }
+.row > [class*="col"]:nth-child(3) .stat-card { animation-delay: .14s; }
+.row > [class*="col"]:nth-child(4) .stat-card { animation-delay: .21s; }
+
+/* Modais: sobem como o painel do vídeo */
+.modal.fade .modal-dialog { transform: translateY(40px) scale(.98); opacity: 0;
+    transition: transform .45s var(--ease-out), opacity .3s; }
+.modal.show .modal-dialog { transform: none; opacity: 1; }
+@media (max-width: 575.98px) {
+    /* no celular o modal é um bottom sheet de verdade */
+    .modal-dialog:not(.modal-sm) { margin: 0; position: absolute; left: 0; right: 0; bottom: 0; max-width: none; }
+    .modal-dialog:not(.modal-sm) .modal-content { border-radius: 22px 22px 0 0; max-height: 92vh; overflow-y: auto; }
+    .modal.fade .modal-dialog:not(.modal-sm) { transform: translateY(100%); opacity: 1; }
+    .modal.show .modal-dialog:not(.modal-sm) { transform: none; }
+}
+
+/* Confirmação (substitui o confirm() nativo) */
+.confirm-icon { width: 56px; height: 56px; margin: 0 auto; border-radius: 50%; display: grid; place-items: center;
+    font-size: 1.6rem; color: var(--warning); background: rgba(245,158,11,.14); animation: lpLogoIn .5s var(--ease-out) both; }
+
+/* Resposta tátil dos botões */
+.btn { transition: transform .12s, box-shadow .2s, background-color .2s; }
+.btn:active:not(:disabled) { transform: scale(.97); }
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .001ms !important; animation-delay: 0s !important; transition-duration: .001ms !important; }
+    .lp-item { opacity: 1; transform: none; }
+}
+
+/* Ajustes finos (revisão visual pós-deploy) */
+.lp-name, .lp-tag { white-space: nowrap; }
+@media (max-width: 575.98px) {
+    /* cards de indicador: ícone em cima, rótulo inteiro (nada cortado) */
+    .stat-card { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .stat-label { white-space: normal; overflow: visible; text-overflow: clip; font-size: .68rem; line-height: 1.25; }
+    .stat-value { font-size: 1.25rem; word-break: break-word; }
+}

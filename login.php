@@ -4,7 +4,7 @@ require_once __DIR__ . '/config/db.php';
 require_once __DIR__ . '/includes/functions.php';
 
 if (is_logged()) {
-    header('Location: ' . BASE_URL . '/dashboard.php');
+    header('Location: ' . BASE_URL . (!empty($_SESSION['trocar_senha']) ? '/trocar_senha.php' : '/dashboard.php'));
     exit;
 }
 ?>
@@ -12,113 +12,116 @@ if (is_logged()) {
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | AluguelPRO</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Entrar | AluguelPRO</title>
+    <meta name="description" content="AluguelPRO - Sistema de Controle de Aluguel. Acesse sua conta.">
+    <meta name="csrf-token" content="<?= csrf_token() ?>">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/app.css">
-    <meta name="description" content="AluguelPRO - Sistema de Controle de Aluguel. Acesse sua conta.">
 </head>
-<body class="login-page">
-    <div class="login-card fade-in">
-        <div class="login-logo">
-            <i class="bi bi-building-fill-check"></i>
-        </div>
-        <h1 class="login-title">AluguelPRO</h1>
-        <p class="login-subtitle">Sistema de Controle de Aluguel</p>
+<body class="login-page lp is-splash">
+<div class="lp-stage">
+    <!-- Marca: surge no centro (splash) e sobe quando o painel entra -->
+    <div class="lp-brand" aria-hidden="true">
+        <div class="lp-glow"></div>
+        <div class="lp-logo"><i class="bi bi-building-fill-check"></i></div>
+        <div class="lp-name">AluguelPRO</div>
+        <div class="lp-tag">Controle de aluguéis</div>
+    </div>
+    <div class="lp-progress" aria-hidden="true"><span></span></div>
 
-        <div id="alertMsg" class="alert alert-danger d-none" role="alert"></div>
+    <!-- Painel que desliza de baixo com o formulário -->
+    <section class="lp-sheet" aria-labelledby="lpTitulo">
+        <div class="lp-grabber" aria-hidden="true"></div>
+        <h1 id="lpTitulo" class="lp-title lp-item" style="--i:0">Bem-vindo de volta</h1>
+        <p class="lp-sub lp-item" style="--i:1">Entre para gerenciar imóveis, contratos e recebimentos.</p>
 
-        <form id="loginForm">
-            <div class="mb-3">
-                <label for="email" class="form-label">E-mail</label>
-                <div class="input-group">
-                    <span class="input-group-text" style="background:var(--input-bg);border-color:var(--input-border);color:var(--text-secondary)">
-                        <i class="bi bi-envelope"></i>
-                    </span>
-                    <input type="email" class="form-control" id="email" name="email" 
-                           placeholder="seu@email.com" required autocomplete="email" autofocus>
+        <div id="alertMsg" class="lp-alert d-none" role="alert"></div>
+
+        <form id="loginForm" novalidate>
+            <div class="lp-field lp-item" style="--i:2">
+                <label for="email">E-mail</label>
+                <div class="lp-input">
+                    <i class="bi bi-envelope" aria-hidden="true"></i>
+                    <input type="email" id="email" name="email" placeholder="seu@email.com" required autocomplete="email">
                 </div>
             </div>
-            <div class="mb-4">
-                <label for="senha" class="form-label">Senha</label>
-                <div class="input-group">
-                    <span class="input-group-text" style="background:var(--input-bg);border-color:var(--input-border);color:var(--text-secondary)">
-                        <i class="bi bi-lock"></i>
-                    </span>
-                    <input type="password" class="form-control" id="senha" name="senha" 
-                           placeholder="••••••••" required autocomplete="current-password">
-                    <button class="btn btn-outline-secondary" type="button" id="toggleSenha" 
-                            style="border-color:var(--input-border);color:var(--text-secondary)">
-                        <i class="bi bi-eye"></i>
-                    </button>
+            <div class="lp-field lp-item" style="--i:3">
+                <label for="senha">Senha</label>
+                <div class="lp-input">
+                    <i class="bi bi-lock" aria-hidden="true"></i>
+                    <input type="password" id="senha" name="senha" placeholder="Sua senha" required autocomplete="current-password">
+                    <button type="button" class="lp-eye" id="toggleSenha" aria-label="Mostrar senha"><i class="bi bi-eye"></i></button>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary w-100" id="btnLogin">
-                <span id="btnText"><i class="bi bi-box-arrow-in-right me-2"></i>Entrar</span>
-                <span id="btnLoading" class="d-none">
-                    <span class="spinner-border spinner-border-sm me-2"></span>Autenticando...
-                </span>
+            <button type="submit" class="lp-btn lp-item" style="--i:4" id="btnLogin">
+                <span id="btnText">Entrar <i class="bi bi-arrow-right ms-1"></i></span>
+                <span id="btnLoading" class="d-none"><span class="spinner-border spinner-border-sm me-2"></span>Entrando…</span>
             </button>
         </form>
 
-        <div class="text-center mt-4">
-            <small class="text-muted">© <?= date('Y') ?> AluguelPRO v1.0</small>
-        </div>
-    </div>
+        <div class="lp-foot lp-item" style="--i:5">© <?= date('Y') ?> AluguelPRO</div>
+    </section>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Toggle senha
-        document.getElementById('toggleSenha').addEventListener('click', function () {
-            const input = document.getElementById('senha');
-            const icon = this.querySelector('i');
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.className = 'bi bi-eye-slash';
-            } else {
-                input.type = 'password';
-                icon.className = 'bi bi-eye';
-            }
-        });
+<script>
+(function () {
+    const body = document.body;
+    const reduz = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const jaViuSplash = sessionStorage.getItem('lp_splash') === '1';
 
-        // Login AJAX
-        document.getElementById('loginForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-            const btn = document.getElementById('btnLogin');
-            const btnText = document.getElementById('btnText');
-            const btnLoading = document.getElementById('btnLoading');
-            const alert = document.getElementById('alertMsg');
+    // 1) splash → 2) marca sobe e o painel desliza (pula o splash em recargas e p/ quem reduz movimento)
+    function pronto() {
+        body.classList.remove('is-splash');
+        body.classList.add('is-ready');
+        setTimeout(() => document.getElementById('email').focus({ preventScroll: true }), reduz ? 0 : 650);
+    }
+    if (reduz || jaViuSplash) pronto();
+    else { sessionStorage.setItem('lp_splash', '1'); setTimeout(pronto, 1500); }
 
-            btn.disabled = true;
-            btnText.classList.add('d-none');
-            btnLoading.classList.remove('d-none');
-            alert.classList.add('d-none');
+    document.getElementById('toggleSenha').addEventListener('click', function () {
+        const input = document.getElementById('senha');
+        const mostrar = input.type === 'password';
+        input.type = mostrar ? 'text' : 'password';
+        this.querySelector('i').className = mostrar ? 'bi bi-eye-slash' : 'bi bi-eye';
+        this.setAttribute('aria-label', mostrar ? 'Ocultar senha' : 'Mostrar senha');
+    });
 
-            const fd = new FormData(this);
-            fd.append('action', 'login');
+    const alerta = document.getElementById('alertMsg');
+    const sheet = document.querySelector('.lp-sheet');
+    function erro(msg) {
+        alerta.textContent = msg;
+        alerta.classList.remove('d-none');
+        sheet.classList.remove('lp-shake'); void sheet.offsetWidth; sheet.classList.add('lp-shake');
+    }
+    function carregando(on) {
+        document.getElementById('btnLogin').disabled = on;
+        document.getElementById('btnText').classList.toggle('d-none', on);
+        document.getElementById('btnLoading').classList.toggle('d-none', !on);
+    }
 
-            fetch('<?= BASE_URL ?>/ajax/auth.php', { method: 'POST', body: fd })
-                .then(r => r.json())
-                .then(res => {
-                    if (res.success) {
-                        window.location.href = '<?= BASE_URL ?>/dashboard.php';
-                    } else {
-                        alert.textContent = res.message;
-                        alert.classList.remove('d-none');
-                        btn.disabled = false;
-                        btnText.classList.remove('d-none');
-                        btnLoading.classList.add('d-none');
-                    }
-                })
-                .catch(() => {
-                    alert.textContent = 'Erro de conexão. Tente novamente.';
-                    alert.classList.remove('d-none');
-                    btn.disabled = false;
-                    btnText.classList.remove('d-none');
-                    btnLoading.classList.add('d-none');
-                });
-        });
-    </script>
+    document.getElementById('loginForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        alerta.classList.add('d-none');
+        if (!this.email.value.trim() || !this.senha.value) return erro('Informe e-mail e senha.');
+        carregando(true);
+        const fd = new FormData(this);
+        fd.append('action', 'login');
+        fetch('<?= BASE_URL ?>/ajax/auth.php', {
+            method: 'POST', body: fd,
+            headers: { 'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content }
+        })
+        .then(r => r.json())
+        .then(res => {
+            if (!res.success) { carregando(false); return erro(res.message || 'Não foi possível entrar.'); }
+            // 3) sucesso: o painel se dissolve e a próxima tela assume
+            body.classList.add('is-leaving');
+            setTimeout(() => { window.location.href = res.redirect || '<?= BASE_URL ?>/dashboard.php'; }, reduz ? 0 : 480);
+        })
+        .catch(() => { carregando(false); erro('Sem conexão com o servidor. Tente novamente.'); });
+    });
+})();
+</script>
 </body>
 </html>

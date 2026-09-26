@@ -20,14 +20,14 @@ switch ($action) {
         $conn = db_connect();
         $id = db_insert($conn, build_insert_sql($conn));
         if ($id) json_response(true, 'Inquilino cadastrado com sucesso!');
-        json_response(false, 'Erro ao cadastrar: ' . mysqli_error($conn));
+        json_response(false, 'Erro ao cadastrar. Verifique os dados e tente novamente.');
 
     case 'update':
         $conn = db_connect();
         $id = sanitize_int($_POST['id'] ?? 0);
         $sql = build_update_sql($conn, $id);
         if (db_query($conn, $sql)) json_response(true, 'Inquilino atualizado com sucesso!');
-        json_response(false, 'Erro ao atualizar: ' . mysqli_error($conn));
+        json_response(false, 'Erro ao atualizar. Verifique os dados e tente novamente.');
 
     case 'delete':
         $conn = db_connect();

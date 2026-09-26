@@ -14,6 +14,27 @@ function require_login() {
         header('Location: ' . BASE_URL . '/login.php');
         exit;
     }
+    // Senha padrão/expirada: obriga a troca antes de usar o sistema.
+    if (!empty($_SESSION['trocar_senha']) && basename($_SERVER['SCRIPT_NAME']) !== 'trocar_senha.php'
+        && strpos($_SERVER['SCRIPT_NAME'], '/ajax/auth.php') === false) {
+        if (strpos($_SERVER['SCRIPT_NAME'], '/ajax/') !== false) json_response(false, 'Troque sua senha para continuar.');
+        header('Location: ' . BASE_URL . '/trocar_senha.php');
+        exit;
+    }
+}
+
+// ---- CSRF: token por sessão, validado em todo POST aos endpoints ----
+function csrf_token() {
+    if (empty($_SESSION['csrf'])) $_SESSION['csrf'] = bin2hex(random_bytes(32));
+    return $_SESSION['csrf'];
+}
+
+function require_csrf() {
+    $enviado = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? ($_POST['csrf'] ?? '');
+    if (!is_string($enviado) || empty($_SESSION['csrf']) || !hash_equals($_SESSION['csrf'], $enviado)) {
+        http_response_code(419);
+        json_response(false, 'Sessão expirada ou requisição inválida. Recarregue a página e tente de novo.');
+    }
 }
 
 function is_admin() {
@@ -295,4 +316,25 @@ function json_response($success, $message = '', $data = []) {
     header('Content-Type: application/json');
     echo json_encode(array_merge(['success' => $success, 'message' => $message], $data));
     exit;
+}
+
+// ============================================================
+// PROTEÇÕES AUTOMÁTICAS DOS ENDPOINTS AJAX
+// ============================================================
+// Todo ajax/*.php inclui este arquivo: aplicamos aqui, num lugar só,
+// (1) CSRF em qualquer POST, (2) exclusão só para admin, (3) erro técnico
+// nunca vaza para a tela (mysqli lança exceção no PHP 8.1+).
+if (php_sapi_name() !== 'cli' && strpos($_SERVER['SCRIPT_NAME'] ?? '', '/ajax/') !== false) {
+    set_exception_handler(function (Throwable $e) {
+        if ($e instanceof RegraNegocioException) json_response(false, $e->getMessage());
+        error_log('Erro não tratado: ' . $e->getMessage() . ' @ ' . $e->getFile() . ':' . $e->getLine());
+        json_response(false, 'Erro ao processar a operação. Tente novamente.');
+    });
+    if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
+        require_csrf();
+        $__acao = $_POST['action'] ?? '';
+        if (in_array($__acao, ['delete', 'excluir'], true) && is_logged() && !is_admin()) {
+            json_response(false, 'Exclusões são restritas a administradores.');
+        }
+    }
 }
