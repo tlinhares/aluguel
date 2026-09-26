@@ -150,7 +150,7 @@ function carregarTabela() {
             { data: "total_imoveis", defaultContent: "0", render: v => `<span class="badge bg-primary">${v||0}</span>` },
             { data: "id", orderable: false, render: function(id, t, row) {
                 return `<button class="btn btn-action btn-outline-primary me-1" onclick="editar(${id})"><i class="bi bi-pencil"></i></button>
-                        <button class="btn btn-action btn-outline-danger" onclick="excluir(${id}, \'${row.nome.replace(/\'/g,"\\\'")}\')"><i class="bi bi-trash"></i></button>`;
+                        <button class="btn btn-action btn-outline-danger" data-nome="${esc(row.nome)}" onclick="excluir(${id}, this.dataset.nome)"><i class="bi bi-trash"></i></button>`;
             }}
         ]
     });

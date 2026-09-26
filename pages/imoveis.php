@@ -154,7 +154,7 @@ function carregarProprietarios() {
             const sel = document.getElementById("imo_proprietario_id");
             sel.innerHTML = \'<option value="">Selecione...</option>\';
             (res.data || []).forEach(p => {
-                sel.innerHTML += `<option value="${p.id}">${p.nome}</option>`;
+                sel.innerHTML += `<option value="${p.id}">${esc(p.nome)}</option>`;
             });
         });
 }

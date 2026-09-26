@@ -2,6 +2,30 @@
 // ALUGUEL PRO - APP JS
 // ============================================================
 
+// ---- Segurança: escape de HTML (use em TODO dado vindo do banco) ----
+function esc(s) {
+    return String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+// ---- Segurança: token CSRF anexado a toda requisição POST do sistema ----
+(function () {
+    const meta = document.querySelector('meta[name="csrf-token"]');
+    const token = () => window.CSRF || (meta ? meta.content : '');
+    const nativo = window.fetch.bind(window);
+    window.fetch = function (url, opts = {}) {
+        const metodo = (opts.method || 'GET').toUpperCase();
+        const mesmoDominio = typeof url === 'string' && (url.startsWith('/') || url.startsWith(location.origin) || !/^https?:/i.test(url));
+        if (metodo !== 'GET' && mesmoDominio) {
+            opts.headers = new Headers(opts.headers || {});
+            opts.headers.set('X-CSRF-Token', token());
+        }
+        return nativo(url, opts);
+    };
+    if (window.jQuery) {
+        jQuery.ajaxSetup({ beforeSend: (xhr, s) => { if (s.type !== 'GET') xhr.setRequestHeader('X-CSRF-Token', token()); } });
+    }
+})();
+
 // ---- Sidebar Toggle ----
 document.addEventListener('DOMContentLoaded', function () {
     const sidebar = document.getElementById('sidebar');
@@ -45,12 +69,13 @@ function showToast(message, type = 'success') {
                 <strong class="me-auto">${type === 'success' ? 'Sucesso' : type === 'danger' ? 'Erro' : 'Aviso'}</strong>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
             </div>
-            <div class="toast-body">${message}</div>
+            <div class="toast-body"></div>
         </div>`;
     const container = document.getElementById('toastContainer');
     if (container) {
         container.insertAdjacentHTML('beforeend', html);
         const el = document.getElementById(id);
+        el.querySelector('.toast-body').textContent = message;
         const bsToast = new bootstrap.Toast(el, { delay: 4500 });
         bsToast.show();
         el.addEventListener('hidden.bs.toast', () => el.remove());
@@ -94,6 +119,7 @@ const dtDefaults = {
     },
     pageLength: 15,
     responsive: true,
+    columnDefs: [{ targets: '_all', render: (d, type) => (type === 'display' && typeof d === 'string') ? esc(d) : d }],
     order: [[0, 'desc']]
 };
 
@@ -116,9 +142,30 @@ function openModal(modalId, title, formId) {
 
 // ---- Confirm Delete ----
 function confirmDelete(message, callback) {
-    if (confirm(message || 'Deseja realmente excluir este registro?')) {
-        callback();
+    let el = document.getElementById('modalConfirmar');
+    if (!el) {
+        document.body.insertAdjacentHTML('beforeend', `
+        <div class="modal fade" id="modalConfirmar" tabindex="-1" aria-labelledby="confirmarTexto" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-sm"><div class="modal-content">
+            <div class="modal-body text-center p-4">
+              <div class="confirm-icon"><i class="bi bi-exclamation-triangle"></i></div>
+              <p id="confirmarTexto" class="mb-0 mt-3"></p>
+            </div>
+            <div class="modal-footer justify-content-center border-0 pt-0 pb-4">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-danger" id="btnConfirmarAcao">Confirmar</button>
+            </div>
+          </div></div>
+        </div>`);
+        el = document.getElementById('modalConfirmar');
     }
+    el.querySelector('#confirmarTexto').textContent = message || 'Deseja realmente excluir este registro?';
+    const modal = bootstrap.Modal.getOrCreateInstance(el);
+    const btn = el.querySelector('#btnConfirmarAcao');
+    const novo = btn.cloneNode(true);           // limpa listeners anteriores
+    btn.replaceWith(novo);
+    novo.addEventListener('click', () => { modal.hide(); callback(); });
+    modal.show();
 }
 
 // ---- Format Currency Input ----

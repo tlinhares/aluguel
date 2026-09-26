@@ -95,7 +95,7 @@ function carregarTabela() {
             { data: "criado_em", render: d => d ? d.split(" ")[0].split("-").reverse().join("/") : "-" },
             { data: "id", orderable: false, render: (id, t, row) =>
                 `<button class="btn btn-action btn-outline-primary me-1" onclick="editar(${id})"><i class="bi bi-pencil"></i></button>
-                 <button class="btn btn-action btn-outline-danger" onclick="excluir(${id}, \'${row.nome.replace(/\'/g,"\\\'")}\')"><i class="bi bi-trash"></i></button>`
+                 <button class="btn btn-action btn-outline-danger" data-nome="${esc(row.nome)}" onclick="excluir(${id}, this.dataset.nome)"><i class="bi bi-trash"></i></button>`
             }
         ]
     });

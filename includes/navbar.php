@@ -10,8 +10,10 @@ $menu_items = [
     ['icon' => 'bi-receipt', 'label' => 'Recibos', 'file' => 'recibos.php', 'url' => BASE_URL.'/pages/recibos.php'],
     ['icon' => 'bi-tools', 'label' => 'Manutenções', 'file' => 'manutencoes.php', 'url' => BASE_URL.'/pages/manutencoes.php'],
     ['icon' => 'bi-bar-chart-fill', 'label' => 'Relatórios', 'file' => 'relatorios.php', 'url' => BASE_URL.'/pages/relatorios.php'],
-    ['icon' => 'bi-people', 'label' => 'Usuários', 'file' => 'usuarios.php', 'url' => BASE_URL.'/pages/usuarios.php'],
 ];
+if (is_admin()) {
+    $menu_items[] = ['icon' => 'bi-people', 'label' => 'Usuários', 'file' => 'usuarios.php', 'url' => BASE_URL.'/pages/usuarios.php'];
+}
 ?>
 <!-- Sidebar -->
 <nav id="sidebar" class="sidebar">
@@ -77,4 +79,4 @@ $menu_items = [
 
     <!-- Page Content -->
     <main class="page-content">
-    <script>window.BASE_URL = '<?= BASE_URL ?>';</script>
+    <script>window.BASE_URL = '<?= BASE_URL ?>'; window.CSRF = '<?= csrf_token() ?>';</script>

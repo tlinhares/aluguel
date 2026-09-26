@@ -31,12 +31,12 @@ switch ($action) {
         $sql = build_sql($conn, 'insert');
         $id = db_insert($conn, $sql);
         if ($id) json_response(true, 'Manutenção registrada!');
-        json_response(false, 'Erro: ' . mysqli_error($conn));
+        json_response(false, 'Erro ao salvar. Verifique os dados e tente novamente.');
 
     case 'update':
         $id = sanitize_int($_POST['id'] ?? 0);
         if (db_query($conn, build_sql($conn, 'update', $id))) json_response(true, 'Manutenção atualizada!');
-        json_response(false, 'Erro: ' . mysqli_error($conn));
+        json_response(false, 'Erro ao salvar. Verifique os dados e tente novamente.');
 
     case 'delete':
         $id = sanitize_int($_POST['id'] ?? 0);
