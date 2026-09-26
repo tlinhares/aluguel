@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
+    <?php include __DIR__ . '/tema.php'; ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= isset($page_title) ? $page_title . ' | ' : '' ?>AluguelPRO</title>
     <meta name="description" content="Sistema de Controle de Aluguel">
@@ -14,7 +15,7 @@
     <!-- DataTables -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
     <!-- App CSS -->
-    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/app.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/app.css?v=<?= filemtime(__DIR__ . "/../assets/css/app.css") ?>">
 </head>
 <body>
     <div class="wrapper">

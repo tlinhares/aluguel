@@ -4,17 +4,19 @@ require_login();
 $obrigatorio = !empty($_SESSION['trocar_senha']);
 ?>
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
+    <?php include __DIR__ . '/includes/tema.php'; ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Trocar senha | AluguelPRO</title>
     <meta name="csrf-token" content="<?= csrf_token() ?>">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/app.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/app.css?v=<?= filemtime(__DIR__ . "/assets/css/app.css") ?>">
 </head>
 <body class="login-page lp is-ready">
+<div class="lp-tema"><button type="button" class="btn-tema" onclick="alternarTema(this)" aria-label="Alternar tema"><i class="bi bi-moon-stars"></i></button></div>
 <div class="lp-stage">
     <div class="lp-brand" aria-hidden="true">
         <div class="lp-glow"></div>

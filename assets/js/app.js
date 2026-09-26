@@ -67,7 +67,7 @@ function showToast(message, type = 'success') {
             <div class="toast-header">
                 <i class="bi ${icon} me-2"></i>
                 <strong class="me-auto">${type === 'success' ? 'Sucesso' : type === 'danger' ? 'Erro' : 'Aviso'}</strong>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
             </div>
             <div class="toast-body"></div>
         </div>`;
@@ -118,6 +118,7 @@ const dtDefaults = {
         paginate: { first: '«', previous: '‹', next: '›', last: '»' }
     },
     pageLength: 15,
+    lengthMenu: [[15, 30, 50, 100, -1], [15, 30, 50, 100, 'Todos']],
     responsive: true,
     columnDefs: [{ targets: '_all', render: (d, type) => (type === 'display' && typeof d === 'string') ? esc(d) : d }],
     order: [[0, 'desc']]
