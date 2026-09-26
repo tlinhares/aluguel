@@ -125,7 +125,7 @@ function carregarImoveis() {
     fetch("" + window.BASE_URL + "/ajax/imoveis.php?action=list").then(r=>r.json()).then(res=>{
         const sel = document.getElementById("mnt_imovel_id");
         sel.innerHTML = \'<option value="">Selecione...</option>\';
-        (res.data||[]).forEach(i => sel.innerHTML += `<option value="${i.id}">${i.logradouro}, ${i.numero||""}</option>`);
+        (res.data||[]).forEach(i => sel.innerHTML += `<option value="${i.id}">${esc(i.logradouro)}, ${esc(i.numero||"")}</option>`);
     });
 }
 carregarImoveis();

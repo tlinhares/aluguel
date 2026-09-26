@@ -2,9 +2,14 @@
 require_once __DIR__ . '/config.php';
 
 function db_connect() {
-    $conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+    try {
+        $conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+    } catch (Throwable $e) {
+        $conn = false;
+    }
     if (!$conn) {
-        die(json_encode(['success' => false, 'message' => 'Erro de conexão com o banco de dados: ' . mysqli_connect_error()]));
+        error_log('Falha de conexão MySQL: ' . mysqli_connect_error());
+        die(json_encode(['success' => false, 'message' => 'Serviço temporariamente indisponível. Tente novamente em instantes.']));
     }
     mysqli_set_charset($conn, 'utf8mb4');
     return $conn;

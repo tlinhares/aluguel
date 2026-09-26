@@ -1,5 +1,6 @@
 <?php
-require_once __DIR__ . '/../../includes/functions.php';
+require_once __DIR__ . '/../includes/functions.php';
+require_login();
 $conn = db_connect();
 
 $id = sanitize_int($_GET['id'] ?? 0);

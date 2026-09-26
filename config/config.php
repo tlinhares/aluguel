@@ -23,6 +23,11 @@ define('BASE_URL', getenv('BASE_URL') !== false ? getenv('BASE_URL') : '/aluguel
 // Configurações de sessão
 ini_set('session.cookie_httponly', 1);
 ini_set('session.use_strict_mode', 1);
+ini_set('session.cookie_samesite', 'Lax');
+// HTTPS direto ou atrás do proxy (Traefik/Coolify repassa X-Forwarded-Proto)
+$__https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+        || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
+if ($__https) ini_set('session.cookie_secure', 1);
 session_name('aluguel_sess');
 if (session_status() === PHP_SESSION_NONE) {
     session_start();

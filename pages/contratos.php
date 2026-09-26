@@ -117,12 +117,12 @@ function carregarSelects() {
     fetch("" + window.BASE_URL + "/ajax/inquilinos.php?action=list").then(r=>r.json()).then(res=>{
         const sel = document.getElementById("ctr_inquilino_id");
         sel.innerHTML = \'<option value="">Selecione...</option>\';
-        (res.data||[]).filter(i=>i.status==="ativo").forEach(i => sel.innerHTML += `<option value="${i.id}">${i.nome}</option>`);
+        (res.data||[]).filter(i=>i.status==="ativo").forEach(i => sel.innerHTML += `<option value="${i.id}">${esc(i.nome)}</option>`);
     });
     fetch("" + window.BASE_URL + "/ajax/imoveis.php?action=list").then(r=>r.json()).then(res=>{
         const sel = document.getElementById("ctr_imovel_id");
         sel.innerHTML = \'<option value="">Selecione...</option>\';
-        (res.data||[]).filter(i=>i.status!=="inativo").forEach(i => sel.innerHTML += `<option value="${i.id}">[${i.status.toUpperCase()}] ${i.logradouro}, ${i.numero||""} - ${i.cidade||""}</option>`);
+        (res.data||[]).filter(i=>i.status!=="inativo").forEach(i => sel.innerHTML += `<option value="${i.id}">[${esc(i.status.toUpperCase())}] ${esc(i.logradouro)}, ${esc(i.numero||"")} - ${esc(i.cidade||"")}</option>`);
     });
 }
 carregarSelects();
