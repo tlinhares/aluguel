@@ -228,3 +228,24 @@ function buscaCep(cepInput, prefix) {
 function formatMoney(val) {
     return 'R$ ' + parseFloat(val || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
+
+// ---- Listas em cartões no celular ----
+// A cada desenho de qualquer DataTable, cada célula recebe o título da coluna em data-label;
+// o CSS (≤991px) usa isso para mostrar "Rótulo ....... valor" sem rolagem horizontal.
+if (window.jQuery) {
+    jQuery(document).on('draw.dt', function (e, settings) {
+        const api = new jQuery.fn.dataTable.Api(settings);
+        // (não usar columns(':visible'): com o thead oculto no celular o DataTables devolve vazio)
+        const titulos = api.columns().indexes().toArray().filter(i => api.column(i).visible())
+            .map(i => api.column(i).header().textContent.trim());
+        jQuery(api.table().node()).addClass('dt-cartoes');
+        jQuery(api.table().body()).children('tr').each(function () {
+            jQuery(this).children('td').each(function (i) {
+                const t = titulos[i] || '';
+                this.setAttribute('data-label', t);
+                this.classList.toggle('td-acoes', /^a[cç][oõ]es$/i.test(t));
+                this.classList.toggle('td-titulo', i === 0);
+            });
+        });
+    });
+}

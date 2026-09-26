@@ -658,8 +658,8 @@ body {
     opacity: 0.4;
 }
 
-.text-money { color: var(--success); font-weight: 600; }
-.text-danger-val { color: var(--danger); font-weight: 600; }
+.text-money { color: var(--success-text); font-weight: 600; }
+.text-danger-val { color: var(--danger-text); font-weight: 600; }
 
 .nav-pills .nav-link {
     color: var(--text-secondary);
@@ -964,3 +964,73 @@ html.trocando-tema, html.trocando-tema * { transition: background-color .35s eas
 .badge.bg-secondary { background-color: #5b6477 !important; color: #fff !important; }
 /* "Mostrar N registros": seta do select cobria o número */
 .dataTables_wrapper .dataTables_length select { min-width: 4.75rem; padding-right: 1.9rem !important; background-image: var(--bs-form-select-bg-img) !important; background-repeat: no-repeat; background-size: 14px 10px; background-position: right .55rem center; }
+
+/* ============================================================
+   LISTAS NO CELULAR/TABLET: cada linha vira um cartão
+   (rótulos vêm de data-label, preenchido em app.js no draw.dt; até 1199px,
+   porque com o menu lateral aberto a tabela de 8 colunas não cabe em 992–1199)
+   ============================================================ */
+@media (max-width: 1199.98px) {
+    .table-responsive { overflow-x: visible; }
+    table.dt-cartoes { width: 100% !important; border-collapse: separate; }
+    table.dt-cartoes thead { display: none; }
+    table.dt-cartoes, table.dt-cartoes tbody, table.dt-cartoes tr, table.dt-cartoes td { display: block; width: 100% !important; }
+    table.dt-cartoes tbody tr {
+        background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px;
+        padding: 4px 14px; margin-bottom: 10px; box-shadow: 0 1px 2px var(--shadow);
+    }
+    table.dt-cartoes > tbody > tr > td {
+        display: block; overflow: hidden;
+        padding: 8px 0 !important; border: 0 !important; border-bottom: 1px dashed var(--card-border) !important;
+        box-shadow: none !important; background: transparent !important;
+        text-align: right; white-space: normal !important; overflow-wrap: anywhere; min-width: 0;
+    }
+    table.dt-cartoes > tbody > tr > td:last-child { border-bottom: 0 !important; }
+    table.dt-cartoes > tbody > tr > td::before {
+        content: attr(data-label); float: left; max-width: 42%; margin-right: 12px; text-align: left; line-height: 1.6;
+        color: var(--text-secondary); font-size: .72rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase;
+    }
+    /* 1ª coluna = cabeçalho do cartão, em destaque */
+    table.dt-cartoes > tbody > tr > td.td-titulo { font-weight: 600; color: var(--text-primary); }
+    /* ações: linha própria, botões maiores p/ o dedo */
+    table.dt-cartoes > tbody > tr > td.td-acoes { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 6px; padding-top: 10px !important; }
+    table.dt-cartoes > tbody > tr > td.td-acoes::before { display: none; }
+    table.dt-cartoes > tbody > tr > td.td-acoes .btn { min-width: 40px; min-height: 36px; margin: 0 !important; }
+    /* linha "nenhum registro" */
+    table.dt-cartoes > tbody > tr > td.dataTables_empty { text-align: center; }
+    table.dt-cartoes > tbody > tr > td.dataTables_empty::before { display: none; }
+    table.dt-cartoes tbody tr:has(td.dataTables_empty) { box-shadow: none; }
+    /* controles da tabela empilhados e sem estourar */
+    .dataTables_wrapper .row { margin-left: 0; margin-right: 0; }
+    .dataTables_wrapper .row > [class*="col-"] { padding-left: 0; padding-right: 0; }
+    .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_length { text-align: left !important; margin-bottom: 8px; }
+    .dataTables_wrapper .dataTables_filter label { display: flex; align-items: center; gap: 8px; width: 100%; }
+    .dataTables_wrapper .dataTables_filter input { flex: 1; min-width: 0; margin-left: 0 !important; }
+    .dataTables_wrapper .dataTables_info { white-space: normal !important; text-align: center; padding-top: 4px; }
+    .dataTables_wrapper .dataTables_paginate, .dataTables_wrapper .dataTables_paginate .pagination { justify-content: center !important; flex-wrap: wrap; }
+    /* o card que envolve a lista não precisa de moldura dupla */
+    .card-body:has(> .table-responsive > .dataTables_wrapper) { padding-left: 12px; padding-right: 12px; }
+}
+@media (max-width: 1199.98px) {
+    /* textos auxiliares dentro da célula (ex.: cidade abaixo do endereço) ficam alinhados à direita */
+    table.dt-cartoes > tbody > tr > td > div, table.dt-cartoes > tbody > tr > td > small { text-align: right; }
+}
+/* Desktop largo: a lista cabe no card — texto das células quebra linha em vez de empurrar a tabela */
+@media (min-width: 1200px) {
+    .table-responsive > .dataTables_wrapper table.dataTable { width: 100% !important; table-layout: auto; }
+    .table-responsive table.dataTable > thead > tr > th { white-space: normal; padding-left: .6rem; padding-right: 1.4rem; }
+    .table-responsive table.dataTable > tbody > tr > td { white-space: normal; overflow-wrap: break-word; padding-left: .6rem; padding-right: .6rem; }
+    .table-responsive table.dataTable > tbody > tr > td:has(.text-money), .table-responsive table.dataTable > tbody > tr > td:has(.badge) { white-space: nowrap; overflow-wrap: normal; }
+    .table-responsive table.dataTable > tbody > tr > td.td-acoes { white-space: nowrap; }
+    .table-responsive table.dataTable .btn-action { padding: .25rem .45rem; }
+}
+@media (min-width: 640px) and (max-width: 1199.98px) {
+    /* tablet: cartões lado a lado */
+    table.dt-cartoes > tbody { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 12px; }
+    table.dt-cartoes > tbody > tr { margin-bottom: 0; }
+    table.dt-cartoes > tbody > tr:has(> td.dataTables_empty) { grid-column: 1 / -1; }
+}
+/* Filtros em pílulas (Manutenções): quebram linha e mostram qual está ativo */
+.filtros-status { display: flex; flex-wrap: wrap; gap: 8px; }
+.filtros-status .btn.active { color: #fff; }
+@media (min-width: 1200px) { .table-responsive table.dataTable > tbody > tr > td.td-titulo { white-space: nowrap; } }
