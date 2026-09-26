@@ -658,8 +658,8 @@ body {
     opacity: 0.4;
 }
 
-.text-money { color: var(--success); font-weight: 600; }
-.text-danger-val { color: var(--danger); font-weight: 600; }
+.text-money { color: var(--success-text); font-weight: 600; }
+.text-danger-val { color: var(--danger-text); font-weight: 600; }
 
 .nav-pills .nav-link {
     color: var(--text-secondary);
