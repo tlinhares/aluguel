@@ -917,6 +917,7 @@ body { background-color: var(--main-bg); color: var(--text-primary); }
 [data-bs-theme="light"] .btn-outline-danger   { --bs-btn-color: var(--danger-text);  --bs-btn-border-color: var(--danger-text); }
 [data-bs-theme="light"] .btn-outline-success  { --bs-btn-color: var(--success-text); --bs-btn-border-color: var(--success-text); }
 [data-bs-theme="light"] .btn-outline-warning  { --bs-btn-color: var(--warning-text); --bs-btn-border-color: var(--warning-text); }
+[data-bs-theme="light"] .btn-outline-secondary { --bs-btn-color: #4b5563; --bs-btn-border-color: #9aa3b2; --bs-btn-hover-bg: #4b5563; --bs-btn-hover-border-color: #4b5563; }
 
 /* Campos, selects e modais */
 .form-control, .form-select { background-color: var(--input-bg); border-color: var(--input-border); color: var(--text-primary); }
