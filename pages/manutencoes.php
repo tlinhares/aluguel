@@ -12,11 +12,11 @@ require_once __DIR__ . '/../includes/navbar.php';
     </div>
 
     <!-- Filtros de status -->
-    <div class="d-flex gap-2 mb-3">
-        <button class="btn btn-sm btn-outline-secondary" onclick="filtrar('')">Todas</button>
-        <button class="btn btn-sm btn-outline-danger" onclick="filtrar('aberta')">Abertas</button>
-        <button class="btn btn-sm btn-outline-warning" onclick="filtrar('em_andamento')">Em Andamento</button>
-        <button class="btn btn-sm btn-outline-success" onclick="filtrar('concluida')">Concluídas</button>
+    <div class="filtros-status mb-3" role="group" aria-label="Filtrar por status">
+        <button class="btn btn-sm btn-outline-secondary" data-status="" onclick="filtrar('')">Todas</button>
+        <button class="btn btn-sm btn-outline-danger" data-status="aberta" onclick="filtrar('aberta')">Abertas</button>
+        <button class="btn btn-sm btn-outline-warning" data-status="em_andamento" onclick="filtrar('em_andamento')">Em Andamento</button>
+        <button class="btn btn-sm btn-outline-success" data-status="concluida" onclick="filtrar('concluida')">Concluídas</button>
     </div>
 
     <div class="card">
@@ -130,7 +130,9 @@ function carregarImoveis() {
 }
 carregarImoveis();
 
-function filtrar(status) { filtroAtual = status; carregarTabela(); }
+function marcarFiltro() { document.querySelectorAll(".filtros-status [data-status]").forEach(b => { const on = b.dataset.status === filtroAtual; b.classList.toggle("active", on); b.setAttribute("aria-pressed", on); }); }
+function filtrar(status) { filtroAtual = status; marcarFiltro(); carregarTabela(); }
+marcarFiltro();
 
 function carregarTabela() {
     let url = "" + window.BASE_URL + "/ajax/manutencoes.php?action=list";

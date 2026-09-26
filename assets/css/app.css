@@ -967,9 +967,10 @@ html.trocando-tema, html.trocando-tema * { transition: background-color .35s eas
 
 /* ============================================================
    LISTAS NO CELULAR/TABLET: cada linha vira um cartão
-   (rótulos vêm de data-label, preenchido em app.js no draw.dt)
+   (rótulos vêm de data-label, preenchido em app.js no draw.dt; até 1199px,
+   porque com o menu lateral aberto a tabela de 8 colunas não cabe em 992–1199)
    ============================================================ */
-@media (max-width: 991.98px) {
+@media (max-width: 1199.98px) {
     .table-responsive { overflow-x: visible; }
     table.dt-cartoes { width: 100% !important; border-collapse: separate; }
     table.dt-cartoes thead { display: none; }
@@ -1010,16 +1011,25 @@ html.trocando-tema, html.trocando-tema * { transition: background-color .35s eas
     /* o card que envolve a lista não precisa de moldura dupla */
     .card-body:has(> .table-responsive > .dataTables_wrapper) { padding-left: 12px; padding-right: 12px; }
 }
-@media (max-width: 991.98px) {
+@media (max-width: 1199.98px) {
     /* textos auxiliares dentro da célula (ex.: cidade abaixo do endereço) ficam alinhados à direita */
     table.dt-cartoes > tbody > tr > td > div, table.dt-cartoes > tbody > tr > td > small { text-align: right; }
 }
-/* Desktop: a lista cabe no card — texto das células quebra linha em vez de empurrar a tabela */
-@media (min-width: 992px) {
+/* Desktop largo: a lista cabe no card — texto das células quebra linha em vez de empurrar a tabela */
+@media (min-width: 1200px) {
     .table-responsive > .dataTables_wrapper table.dataTable { width: 100% !important; table-layout: auto; }
     .table-responsive table.dataTable > thead > tr > th { white-space: normal; padding-left: .6rem; padding-right: 1.4rem; }
-    .table-responsive table.dataTable > tbody > tr > td { white-space: normal; overflow-wrap: anywhere; padding-left: .6rem; padding-right: .6rem; }
+    .table-responsive table.dataTable > tbody > tr > td { white-space: normal; overflow-wrap: break-word; padding-left: .6rem; padding-right: .6rem; }
     .table-responsive table.dataTable > tbody > tr > td:has(.text-money), .table-responsive table.dataTable > tbody > tr > td:has(.badge) { white-space: nowrap; overflow-wrap: normal; }
     .table-responsive table.dataTable > tbody > tr > td.td-acoes { white-space: nowrap; }
     .table-responsive table.dataTable .btn-action { padding: .25rem .45rem; }
 }
+@media (min-width: 640px) and (max-width: 1199.98px) {
+    /* tablet: cartões lado a lado */
+    table.dt-cartoes > tbody { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 12px; }
+    table.dt-cartoes > tbody > tr { margin-bottom: 0; }
+    table.dt-cartoes > tbody > tr:has(> td.dataTables_empty) { grid-column: 1 / -1; }
+}
+/* Filtros em pílulas (Manutenções): quebram linha e mostram qual está ativo */
+.filtros-status { display: flex; flex-wrap: wrap; gap: 8px; }
+.filtros-status .btn.active { color: #fff; }
