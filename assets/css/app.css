@@ -1033,3 +1033,4 @@ html.trocando-tema, html.trocando-tema * { transition: background-color .35s eas
 /* Filtros em pílulas (Manutenções): quebram linha e mostram qual está ativo */
 .filtros-status { display: flex; flex-wrap: wrap; gap: 8px; }
 .filtros-status .btn.active { color: #fff; }
+@media (min-width: 1200px) { .table-responsive table.dataTable > tbody > tr > td.td-titulo { white-space: nowrap; } }
