@@ -118,6 +118,7 @@ const dtDefaults = {
         paginate: { first: '«', previous: '‹', next: '›', last: '»' }
     },
     pageLength: 15,
+    lengthMenu: [[15, 30, 50, 100, -1], [15, 30, 50, 100, 'Todos']],
     responsive: true,
     columnDefs: [{ targets: '_all', render: (d, type) => (type === 'display' && typeof d === 'string') ? esc(d) : d }],
     order: [[0, 'desc']]
