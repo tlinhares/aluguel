@@ -811,3 +811,12 @@ body {
     *, *::before, *::after { animation-duration: .001ms !important; animation-delay: 0s !important; transition-duration: .001ms !important; }
     .lp-item { opacity: 1; transform: none; }
 }
+
+/* Ajustes finos (revisão visual pós-deploy) */
+.lp-name, .lp-tag { white-space: nowrap; }
+@media (max-width: 575.98px) {
+    /* cards de indicador: ícone em cima, rótulo inteiro (nada cortado) */
+    .stat-card { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .stat-label { white-space: normal; overflow: visible; text-overflow: clip; font-size: .68rem; line-height: 1.25; }
+    .stat-value { font-size: 1.25rem; word-break: break-word; }
+}
