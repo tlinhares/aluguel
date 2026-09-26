@@ -979,24 +979,24 @@ html.trocando-tema, html.trocando-tema * { transition: background-color .35s eas
         padding: 4px 14px; margin-bottom: 10px; box-shadow: 0 1px 2px var(--shadow);
     }
     table.dt-cartoes > tbody > tr > td {
-        display: flex; justify-content: space-between; align-items: center; gap: 12px;
+        display: block; overflow: hidden;
         padding: 8px 0 !important; border: 0 !important; border-bottom: 1px dashed var(--card-border) !important;
         box-shadow: none !important; background: transparent !important;
         text-align: right; white-space: normal !important; overflow-wrap: anywhere; min-width: 0;
     }
     table.dt-cartoes > tbody > tr > td:last-child { border-bottom: 0 !important; }
     table.dt-cartoes > tbody > tr > td::before {
-        content: attr(data-label); flex: 0 0 auto; max-width: 42%; text-align: left;
+        content: attr(data-label); float: left; max-width: 42%; margin-right: 12px; text-align: left; line-height: 1.6;
         color: var(--text-secondary); font-size: .72rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase;
     }
     /* 1ª coluna = cabeçalho do cartão, em destaque */
     table.dt-cartoes > tbody > tr > td.td-titulo { font-weight: 600; color: var(--text-primary); }
     /* ações: linha própria, botões maiores p/ o dedo */
-    table.dt-cartoes > tbody > tr > td.td-acoes { justify-content: flex-end; flex-wrap: wrap; gap: 6px; padding-top: 10px !important; }
+    table.dt-cartoes > tbody > tr > td.td-acoes { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 6px; padding-top: 10px !important; }
     table.dt-cartoes > tbody > tr > td.td-acoes::before { display: none; }
     table.dt-cartoes > tbody > tr > td.td-acoes .btn { min-width: 40px; min-height: 36px; margin: 0 !important; }
     /* linha "nenhum registro" */
-    table.dt-cartoes > tbody > tr > td.dataTables_empty { justify-content: center; text-align: center; }
+    table.dt-cartoes > tbody > tr > td.dataTables_empty { text-align: center; }
     table.dt-cartoes > tbody > tr > td.dataTables_empty::before { display: none; }
     table.dt-cartoes tbody tr:has(td.dataTables_empty) { box-shadow: none; }
     /* controles da tabela empilhados e sem estourar */
@@ -1009,4 +1009,8 @@ html.trocando-tema, html.trocando-tema * { transition: background-color .35s eas
     .dataTables_wrapper .dataTables_paginate, .dataTables_wrapper .dataTables_paginate .pagination { justify-content: center !important; flex-wrap: wrap; }
     /* o card que envolve a lista não precisa de moldura dupla */
     .card-body:has(> .table-responsive > .dataTables_wrapper) { padding-left: 12px; padding-right: 12px; }
+}
+@media (max-width: 991.98px) {
+    /* textos auxiliares dentro da célula (ex.: cidade abaixo do endereço) ficam alinhados à direita */
+    table.dt-cartoes > tbody > tr > td > div, table.dt-cartoes > tbody > tr > td > small { text-align: right; }
 }

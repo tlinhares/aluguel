@@ -235,7 +235,9 @@ function formatMoney(val) {
 if (window.jQuery) {
     jQuery(document).on('draw.dt', function (e, settings) {
         const api = new jQuery.fn.dataTable.Api(settings);
-        const titulos = api.columns(':visible').header().toArray().map(h => h.textContent.trim());
+        // (não usar columns(':visible'): com o thead oculto no celular o DataTables devolve vazio)
+        const titulos = api.columns().indexes().toArray().filter(i => api.column(i).visible())
+            .map(i => api.column(i).header().textContent.trim());
         jQuery(api.table().node()).addClass('dt-cartoes');
         jQuery(api.table().body()).children('tr').each(function () {
             jQuery(this).children('td').each(function (i) {
