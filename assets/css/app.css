@@ -962,3 +962,5 @@ html.trocando-tema, html.trocando-tema * { transition: background-color .35s eas
 .badge.bg-info { color: #0b2530 !important; }
 .badge.bg-warning { color: #2b1d00 !important; }
 .badge.bg-secondary { background-color: #5b6477 !important; color: #fff !important; }
+/* "Mostrar N registros": seta do select cobria o número */
+.dataTables_wrapper .dataTables_length select { min-width: 4.75rem; padding-right: 1.9rem !important; background-position: right .45rem center; }
