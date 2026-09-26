@@ -15,7 +15,7 @@
     <!-- DataTables -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
     <!-- App CSS -->
-    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/app.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/app.css?v=<?= filemtime(__DIR__ . "/../assets/css/app.css") ?>">
 </head>
 <body>
     <div class="wrapper">
