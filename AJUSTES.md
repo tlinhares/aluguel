@@ -63,6 +63,7 @@ Não há testes automatizados. As correções da seção 2 foram testadas manual
 - [x] JS da tela Contas a Receber estava quebrado (`<?= ?>` dentro da string `$extra_js`).
 - [x] Badge de prioridade, texto "Térmito", total do relatório de receita, `CONCAT` com número nulo, exclusão de imóvel com contratos encerrados ou manutenções.
 - [x] Credenciais do banco movidas para `config/config.local.php` (fora do git).
+- [x] Tela de login não vem mais preenchida com as credenciais do admin.
 
 ---
 
@@ -70,8 +71,7 @@ Não há testes automatizados. As correções da seção 2 foram testadas manual
 
 ### 🔴 P1: Segurança (fazer primeiro)
 
-- [ ] **1. Login pré-preenchido com as credenciais do admin.**
-  `login.php:40` e `login.php:50` têm `value="admin@sistema.com"` e `value="admin123"`. Remover os dois `value`. Trocar a senha do admin no banco de produção.
+- [ ] **1. Senha padrão do admin.** O login pré-preenchido já foi removido de `login.php`, mas a senha `admin123` (documentada no `banco.sql`) ainda precisa ser trocada em produção pela tela Usuários. Considerar forçar a troca de senha no primeiro acesso.
 
 - [ ] **2. Senhas em MD5 sem salt.**
   `ajax/auth.php` (login) e `ajax/usuarios.php` (create/update) usam `md5()`. Migrar para `password_hash()` / `password_verify()`.

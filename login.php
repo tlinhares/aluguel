@@ -37,7 +37,7 @@ if (is_logged()) {
                         <i class="bi bi-envelope"></i>
                     </span>
                     <input type="email" class="form-control" id="email" name="email" 
-                           placeholder="seu@email.com" required autocomplete="email" value="admin@sistema.com">
+                           placeholder="seu@email.com" required autocomplete="email" autofocus>
                 </div>
             </div>
             <div class="mb-4">
@@ -47,7 +47,7 @@ if (is_logged()) {
                         <i class="bi bi-lock"></i>
                     </span>
                     <input type="password" class="form-control" id="senha" name="senha" 
-                           placeholder="••••••••" required autocomplete="current-password" value="admin123">
+                           placeholder="••••••••" required autocomplete="current-password">
                     <button class="btn btn-outline-secondary" type="button" id="toggleSenha" 
                             style="border-color:var(--input-border);color:var(--text-secondary)">
                         <i class="bi bi-eye"></i>
